@@ -25,6 +25,7 @@
 
 SECTIONS
 {
+    /* Base Loader Area for arm-64(0x8000 for arm-32)*/
     . = 0x80000;
     .text : { *(.text.boot) }
 
