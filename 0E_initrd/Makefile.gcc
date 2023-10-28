@@ -25,7 +25,7 @@
 
 SRCS = $(wildcard *.c)
 OBJS = $(SRCS:.c=.o)
-CFLAGS = -Wall -O2 -ffreestanding -fno-stack-protector -nostdinc -nostdlib -nostartfiles
+CFLAGS = -Wall -O2 -ffreestanding -fno-stack-protector -nostdinc -nostdlib 
 
 all: clean kernel8.img
 
@@ -45,7 +45,7 @@ rd.o: ramdisk
 	aarch64-linux-gnu-ld -r -b binary -o rd.o ramdisk
 
 kernel8.img: start.o rd.o $(OBJS)
-	aarch64-linux-gnu-ld -nostdlib -nostartfiles start.o rd.o $(OBJS) -T link.ld -o kernel8.elf
+	aarch64-linux-gnu-ld -nostdlib  start.o rd.o $(OBJS) -T link.ld -o kernel8.elf
 	aarch64-linux-gnu-objcopy -O binary kernel8.elf kernel8.img
 
 clean:

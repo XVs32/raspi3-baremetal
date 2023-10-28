@@ -25,7 +25,7 @@
 
 SRCS = $(wildcard *.c)
 OBJS = $(SRCS:.c=.o)
-CFLAGS = -Wall -O2 -ffreestanding -nostdinc -nostdlib -nostartfiles
+CFLAGS = -Wall -O2 -ffreestanding -nostdinc -nostdlib 
 
 all: clean kernel8.img
 
@@ -42,7 +42,7 @@ font_sfn.o: font.sfn
 	aarch64-linux-gnu-ld -r -b binary -o font_sfn.o font.sfn
 
 kernel8.img: start.o font_psf.o font_sfn.o $(OBJS)
-	aarch64-linux-gnu-ld -nostdlib -nostartfiles start.o font_psf.o font_sfn.o $(OBJS) -T link.ld -o kernel8.elf
+	aarch64-linux-gnu-ld -nostdlib  start.o font_psf.o font_sfn.o $(OBJS) -T link.ld -o kernel8.elf
 	aarch64-linux-gnu-objcopy -O binary kernel8.elf kernel8.img
 
 clean:
