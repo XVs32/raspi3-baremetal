@@ -53,18 +53,24 @@ void uart_init()
     *AUX_MU_MCR = 0;
     *AUX_MU_IER = 0;
     *AUX_MU_IIR = 0x0;    // disable interrupts /*from pi2 manual(bcm2835)*/
-    *AUX_MU_BAUD = 270;    // 115200 baud
+    *AUX_MU_BAUD = 270;    // 115200 baud /*see pi2 manual 2.2.1*/
     /* map UART1 to GPIO pins */
-    r=*GPFSEL1;
-    r&=~((7<<12)|(7<<15)); // gpio14, gpio15
-    r|=(2<<12)|(2<<15);    // alt5
-    *GPFSEL1 = r;
-    *GPPUD = 0;            // enable pins 14 and 15
+    r=*GPFSEL1;            // access to gpio 10~20
+    r&=~((7<<12)|(7<<15)); // reset gpio14, gpio15
+    r|=(2<<12)|(2<<15);    // set gpio14, 15 to alt5 mode
+    *GPFSEL1 = r;          // put value to actual reg
+
+    // to make pull-up/down setting actually effect on GPIO
+    // see pi2 manual(GPIO Pull-up/down Clock Registers (GPPUDCLKn))
+    *GPPUD = 0;            // remove current pull-up/down
+    r=150; while(r--) { asm volatile("nop"); } //sleep
+    *GPPUDCLK0 = (1<<14)|(1<<15);  // clock gpio 14 and 15
     r=150; while(r--) { asm volatile("nop"); }
-    *GPPUDCLK0 = (1<<14)|(1<<15);
-    r=150; while(r--) { asm volatile("nop"); }
-    *GPPUDCLK0 = 0;        // flush GPIO setup
-    *AUX_MU_CNTL = 3;      // enable Tx, Rx
+    *GPPUD = 0;            // remove current pull-up/down
+    *GPPUDCLK0 = 0;        // remove clock
+    // gpio pull-up/down setting done
+
+    *AUX_MU_CNTL = 3;      // enable UART transmitter and receiver
 }
 
 /**
