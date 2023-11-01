@@ -52,7 +52,7 @@ void uart_init()
     *AUX_MU_LCR = 1;       // 8 bits mode /*pi2 manual(bcm2835) shows that only the 0-bit control whether uart is 7 or 8 bit mode*/
     *AUX_MU_MCR = 0;
     *AUX_MU_IER = 0;
-    *AUX_MU_IIR = 0xc6;    // disable interrupts
+    *AUX_MU_IIR = 0x0;    // disable interrupts /*from pi2 manual(bcm2835)*/
     *AUX_MU_BAUD = 270;    // 115200 baud
     /* map UART1 to GPIO pins */
     r=*GPFSEL1;
