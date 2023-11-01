@@ -1,4 +1,4 @@
-/*
+*
  * Copyright (C) 2018 bzt (bztsrc@github)
  *
  * Permission is hereby granted, free of charge, to any person
@@ -31,11 +31,9 @@ _start:
     // read cpu id, stop slave cores
     mrs     x1, mpidr_el1
     and     x1, x1, #3
-    cbz     x1, 2f
+    cbnz    x1, halt
     // cpu id > 0, stop
-1:  wfe
-    b       1b
-2:  // cpu id == 0
+1:  // cpu id == 0
 
     // set top of stack just before our code (stack grows to a lower address per AAPCS64)
     ldr     x1, =_start
@@ -43,13 +41,16 @@ _start:
 
     // clear bss
     ldr     x1, =__bss_start
-    ldr     w2, =__bss_size
-3:  cbz     w2, 4f
+    ldr     x2, =__bss_size
+2:  cbz     x2, 3f
     str     xzr, [x1], #8
-    sub     w2, w2, #1
-    cbnz    w2, 3b
+    sub     x2, x2, #1
+    cbnz    x2, 2b
 
     // jump to C code, should not return
-4:  bl      main
+3:  bl      main
     // for failsafe, halt this core too
-    b       1b
+
+halt:
+    wfe
+    b       halt
