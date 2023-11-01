@@ -49,7 +49,7 @@ void uart_init()
     /* initialize UART */
     *AUX_ENABLE |=1;       // enable UART1, AUX mini uart
     *AUX_MU_CNTL = 0;
-    *AUX_MU_LCR = 3;       // 8 bits
+    *AUX_MU_LCR = 1;       // 8 bits mode /*pi2 manual(bcm2835) shows that only the 0-bit control whether uart is 7 or 8 bit mode*/
     *AUX_MU_MCR = 0;
     *AUX_MU_IER = 0;
     *AUX_MU_IIR = 0xc6;    // disable interrupts
