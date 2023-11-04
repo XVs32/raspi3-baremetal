@@ -81,7 +81,7 @@ void lfb_init()
     mbox[32] = 4;
     mbox[33] = 0;           //FrameBufferInfo.pitch
 
-    mbox[34] = MBOX_TAG_LAST;
+    mbox[34] = MBOX_TAG_PROPERTY_END;
 
     //this might not return exactly what we asked for, could be
     //the closest supported resolution instead

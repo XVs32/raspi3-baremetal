@@ -112,7 +112,7 @@ void lfb_init()
     mbox[32] = 4;
     mbox[33] = 0;           //FrameBufferInfo.pitch
 
-    mbox[34] = MBOX_TAG_LAST;
+    mbox[34] = MBOX_TAG_PROPERTY_END;
 
     if(mbox_call(MBOX_CH_PROP) && mbox[20]==32 && mbox[28]!=0) {
         mbox[28]&=0x3FFFFFFF;
