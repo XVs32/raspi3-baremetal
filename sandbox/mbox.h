@@ -40,7 +40,6 @@ extern volatile unsigned int mbox[36];
 #define MBOX_CH_PROP    8
 
 /* tags */
-#define MBOX_TAG_SET_POWER_STATE       0x28001
 #define MBOX_TAG_PROPERTY_END                             0
 #define MBOX_TAG_GET_FIRMWARE_REVISION                    0x00000001
 #define MBOX_TAG_SET_CURSOR_INFO                          0x00008010
