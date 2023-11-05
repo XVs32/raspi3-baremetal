@@ -106,7 +106,7 @@ void lfb_showpicture()
     unsigned char *ptr=lfb;
     char *data=homer_data, pixel[4];
 
-    ptr += (height-homer_height)/2*pitch + (width-homer_width)*2;
+    //ptr += (height-homer_height)/2*pitch + (width-homer_width)*2;
     for(y=0;y<homer_height;y++) {
         for(x=0;x<homer_width;x++) {
             HEADER_PIXEL(data, pixel);
