@@ -28,11 +28,14 @@
 #include "homer.h"
 #include "delays.h"
 
+#define SCREEN_WIDTH    1920
+#define SCREEN_HEIGHT   1080
+
 unsigned int width, height, pitch, isrgb;   /* dimensions and channel order */
 unsigned char *lfb;                         /* raw frame buffer address */
 
 /**
- * Set screen resolution to 1024x768
+ * Set screen resolution to 1920x1080
  */
 void lfb_init()
 {
@@ -45,14 +48,14 @@ void lfb_init()
     mbox[2] = MBOX_TAG_FRAMEBUFFER_SET_PHYSICAL_WIDTH_HEIGHT;  //set phy wh
     mbox[3] = 8;
     mbox[4] = 0;
-    mbox[5] = 1024;         //FrameBufferInfo.width
-    mbox[6] = 768;          //FrameBufferInfo.height
+    mbox[5] = SCREEN_WIDTH;         //FrameBufferInfo.width
+    mbox[6] = SCREEN_HEIGHT;        //FrameBufferInfo.height
 
     mbox[7] = MBOX_TAG_FRAMEBUFFER_SET_VIRTUAL_WIDTH_HEIGHT;  //set virt wh
     mbox[8] = 8;
     mbox[9] = 0;
-    mbox[10] = 1024;        //FrameBufferInfo.virtual_width
-    mbox[11] = 768;         //FrameBufferInfo.virtual_height
+    mbox[10] = SCREEN_WIDTH;        //FrameBufferInfo.virtual_width
+    mbox[11] = SCREEN_HEIGHT;       //FrameBufferInfo.virtual_height
 
     mbox[12] = MBOX_TAG_FRAMEBUFFER_GET_VIRTUAL_OFFSET; //set virt offset
     mbox[13] = 8;
@@ -73,7 +76,7 @@ void lfb_init()
     mbox[25] = MBOX_TAG_FRAMEBUFFER_ALLOCATE; //get framebuffer, gets alignment on request
     mbox[26] = 8;
     mbox[27] = 0;
-    mbox[28] = 4096;        //FrameBufferInfo.pointer
+    mbox[28] = SCREEN_WIDTH * 4;        //FrameBufferInfo.pointer
     mbox[29] = 0;           //FrameBufferInfo.size
 
     mbox[30] = MBOX_TAG_FRAMEBUFFER_GET_PITCH; //get pitch
@@ -106,7 +109,6 @@ void lfb_showpicture()
     unsigned char *ptr=lfb;
     char *data=homer_data, pixel[4];
 
-    //ptr += (height-homer_height)/2*pitch + (width-homer_width)*2;
     for(y=0;y<homer_height;y++) {
         for(x=0;x<homer_width;x++) {
             HEADER_PIXEL(data, pixel);
