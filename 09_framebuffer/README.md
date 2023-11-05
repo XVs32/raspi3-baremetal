@@ -34,3 +34,9 @@ Main
 ----
 
 Very simple. We set the resolution and display the picture, that's all.
+
+Useful tool
+---
+
+convert jpg to pixel value, use 3 bytes/pixel XXXXXX00 option
+https://digole.com/tools/PicturetoC_Hex_converter.php
