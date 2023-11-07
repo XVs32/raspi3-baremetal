@@ -5,7 +5,7 @@
 #define ASCII_PIXEL_HEIGHT  8
 
 #define FONT(c,x,y) {\
-if( f[c][y]&&(0x80>>x) == 1 ){\
+if( (f[c][y]&(0x01<<x)) != 0){\
 pixel[0] = 0xff; \
 pixel[1] = 0xff; \
 pixel[2] = 0xff; \
