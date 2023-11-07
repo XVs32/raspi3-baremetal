@@ -36,6 +36,11 @@ void main()
     //lfb_showpicture();
 
     lfb_showchar(0,0,'1');
+    lfb_showchar(1,0,'2');
+    lfb_showchar(2,0,'3');
+    lfb_showchar(3,1,'a');
+    lfb_showchar(4,2,'b');
+    lfb_showchar(5,3,'c');
 
     // echo everything back
     while(1) {
