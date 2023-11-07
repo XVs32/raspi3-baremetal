@@ -27,6 +27,7 @@
 #include "mbox.h"
 #include "homer.h"
 #include "delays.h"
+#include "ascii_pixel.h"
 
 #define SCREEN_WIDTH    1920
 #define SCREEN_HEIGHT   1080
@@ -118,5 +119,25 @@ void lfb_showpicture()
             ptr+=4;
         }
         ptr+=pitch-homer_width*4;
+    }
+}
+
+void lfb_showchar(int x, int y, char c){
+    unsigned char *ptr=lfb;
+    char pixel[4];
+
+    //move to offset
+    ptr += x*4;
+    ptr += y*pitch;
+    for(y=0;y<ASCII_PIXEL_HEIGHT;y++) {
+        for(x=0;x<ASCII_PIXEL_WIDTH;x++) {
+            FONT(c,x,y);
+
+            // the image is in RGB. So if we have an RGB framebuffer, we can copy the pixels
+            // directly, but for BGR we must swap R (pixel[0]) and B (pixel[2]) channels.
+            *((unsigned int*)ptr)=isrgb ? *((unsigned int *)&pixel) : (unsigned int)(pixel[0]<<16 | pixel[1]<<8 | pixel[2]);
+            ptr+=4;
+        }
+        ptr+=pitch-ASCII_PIXEL_WIDTH*4;
     }
 }

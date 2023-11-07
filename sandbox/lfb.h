@@ -25,3 +25,4 @@
 
 void lfb_init();
 void lfb_showpicture();
+void lfb_showchar(int x, int y, char c);
