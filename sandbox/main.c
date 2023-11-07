@@ -33,7 +33,9 @@ void main()
     lfb_init();
 
     // display a pixmap
-    lfb_showpicture();
+    //lfb_showpicture();
+
+    lfb_showchar(0,0,'1');
 
     // echo everything back
     while(1) {
