@@ -167,7 +167,7 @@ void lfb_shift(int offset_x, int offset_y){
             for(x=SCREEN_WIDTH-1;x>=offset_x;x--) {
                 ptr[x + y*SCREEN_WIDTH + 0] = ptr[x + y*SCREEN_WIDTH + 0 - offset_x];
             }
-            for(;x>0;x--) {
+            for(;x>=0;x--) {
                 ptr[x + y*SCREEN_WIDTH + 0] = 0;
             }
         }
@@ -189,7 +189,7 @@ void lfb_shift(int offset_x, int offset_y){
                 ptr[x + y*SCREEN_WIDTH + 0] = ptr[x + (y-offset_y)*SCREEN_WIDTH + 0];
             }
         }
-        for(;y>0;y--) {
+        for(;y>=0;y--) {
             for(x=0;x<SCREEN_WIDTH;x++) {
                 ptr[x + y*SCREEN_WIDTH + 0] = 0;
             }
