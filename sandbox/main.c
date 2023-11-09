@@ -27,6 +27,7 @@
 #include "ascii_pixel.h"
 #include "lfb.h"
 #include "sd.h"
+#include "print.h"
 
 // the end of bss segment from linker
 extern unsigned char _end;
@@ -49,7 +50,16 @@ void main()
         lfb_showchar(4,11,'K');
 
         lfb_shift(4*(ASCII_PIXEL_WIDTH*CHAR_SCALE),0);
-        lfb_shift(-2*(ASCII_PIXEL_WIDTH*CHAR_SCALE),-11*(ASCII_PIXEL_HEIGHT*CHAR_SCALE));
+
+        print_dec(1234567890123456789);
+        print_dec(1234567890123456789);
+        print_dec(1234567890123456789);
+        print_dec(1234567890123456789);
+        print_dec(1234567890123456789);
+        print_dec(12345);
+        print_dec(-789101);
+
+        
 
         // read the master boot record after our bss segment
         if(sd_readblock(0,&_end,1)) {
