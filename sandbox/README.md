@@ -9,7 +9,9 @@ Ignore UTF-8 chapter for now, use ascii instead
 
 Try reading sector in SD, succeed in qemu but failed in real raspi
 
+Make print(int/str) first, so that I can debug SD sector reading(without uart/debugger its kinda difficult for me...)
 
+Added shift pixel function(for the coming print function)
 
 Useful tool
 ---
