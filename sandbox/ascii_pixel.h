@@ -4,6 +4,8 @@
 #define ASCII_PIXEL_WIDTH   8
 #define ASCII_PIXEL_HEIGHT  8
 
+#define CHAR_SCALE      4
+
 #define FONT(c,x,y) {\
 if( (f[c][y]&(0x01<<x)) != 0){\
 pixel[0] = 0xff; \
