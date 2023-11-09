@@ -162,9 +162,6 @@ void lfb_shift(int offset_x, int offset_y){
     uint32_t *ptr=lfb;
     int x,y;
 
-    offset_x *=(ASCII_PIXEL_WIDTH*CHAR_SCALE);
-    offset_y *=(ASCII_PIXEL_HEIGHT*CHAR_SCALE);
-
     if(offset_x > 0){
         for(y=0;y<SCREEN_HEIGHT;y++) {
             for(x=SCREEN_WIDTH-1;x>=offset_x;x--) {
