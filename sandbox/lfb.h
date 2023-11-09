@@ -26,3 +26,6 @@
 void lfb_init();
 void lfb_showpicture();
 void lfb_showchar(int x, int y, char c);
+unsigned int lfb_maxchar();
+unsigned int lfb_maxline();
+unsigned int lfb_shift(int offset_x, int offset_y);

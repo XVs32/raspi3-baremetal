@@ -28,11 +28,11 @@
 #include "homer.h"
 #include "delays.h"
 #include "ascii_pixel.h"
+#include <stdint.h>
 
 #define SCREEN_WIDTH    1920
 #define SCREEN_HEIGHT   1080
 
-#define CHAR_SCALE      4
 
 unsigned int width, height, pitch, isrgb;   /* dimensions and channel order */
 unsigned char *lfb;                         /* raw frame buffer address */
@@ -43,7 +43,7 @@ unsigned char *lfb;                         /* raw frame buffer address */
 void lfb_init()
 {
     /* newer qemu segfaults if we don't wait here a bit */
-    //wait_msec(100000);
+    wait_msec(100000);
 
     mbox[0] = 35*4;
     mbox[1] = MBOX_REQUEST;
@@ -101,6 +101,7 @@ void lfb_init()
     } else {
         uart_puts("Unable to set screen resolution to 1024x768x32\n");
     }
+    
 }
 
 /**
@@ -143,4 +144,71 @@ void lfb_showchar(int x, int y, char c){
         }
         ptr+=pitch-ASCII_PIXEL_WIDTH*CHAR_SCALE*4;
     }
+}
+
+unsigned int lfb_maxchar(){
+    return SCREEN_WIDTH/(ASCII_PIXEL_WIDTH*CHAR_SCALE);
+}
+
+unsigned int lfb_maxline(){
+    return SCREEN_HEIGHT/(ASCII_PIXEL_HEIGHT*CHAR_SCALE);
+}
+
+/**
+ * Shift the screen, drop pixels outside of screen
+ */
+void lfb_shift(int offset_x, int offset_y){
+
+    uint32_t *ptr=lfb;
+    int x,y;
+
+    offset_x *=(ASCII_PIXEL_WIDTH*CHAR_SCALE);
+    offset_y *=(ASCII_PIXEL_HEIGHT*CHAR_SCALE);
+
+    if(offset_x > 0){
+        for(y=0;y<SCREEN_HEIGHT;y++) {
+            for(x=SCREEN_WIDTH-1;x>=offset_x;x--) {
+                ptr[x + y*SCREEN_WIDTH + 0] = ptr[x + y*SCREEN_WIDTH + 0 - offset_x];
+            }
+            for(;x>0;x--) {
+                ptr[x + y*SCREEN_WIDTH + 0] = 0;
+            }
+        }
+    }
+    else if(offset_x < 0){
+        for(y=0;y<SCREEN_HEIGHT;y++) {
+            for(x=0;x<(SCREEN_WIDTH + offset_x);x++) {
+                ptr[x + y*SCREEN_WIDTH + 0] = ptr[x + y*SCREEN_WIDTH + 0 - offset_x];
+            }
+            for(;x<SCREEN_WIDTH;x++) {
+                ptr[x + y*SCREEN_WIDTH + 0] = 0;
+            }
+        }
+    }
+
+    if(offset_y > 0){
+        for(y=SCREEN_HEIGHT-1;y>=offset_y;y--) {
+            for(x=0;x<SCREEN_WIDTH;x++) {
+                ptr[x + y*SCREEN_WIDTH + 0] = ptr[x + (y-offset_y)*SCREEN_WIDTH + 0];
+            }
+        }
+        for(;y>0;y--) {
+            for(x=0;x<SCREEN_WIDTH;x++) {
+                ptr[x + y*SCREEN_WIDTH + 0] = 0;
+            }
+        }
+    }
+    else if(offset_y < 0){
+        for(y=0;y<SCREEN_HEIGHT+offset_y;y++) {
+            for(x=0;x<SCREEN_WIDTH;x++) {
+                ptr[x + y*SCREEN_WIDTH + 0] = ptr[x + (y-offset_y)*SCREEN_WIDTH + 0];
+            }
+        }
+        for(;y<SCREEN_HEIGHT;y++) {
+            for(x=0;x<SCREEN_WIDTH;x++) {
+                ptr[x + y*SCREEN_WIDTH + 0] = 0;
+            }
+        }
+    }
+    return;
 }
