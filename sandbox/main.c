@@ -25,6 +25,10 @@
 
 #include "uart.h"
 #include "lfb.h"
+#include "sd.h"
+
+// the end of bss segment from linker
+extern unsigned char _end;
 
 void main()
 {
@@ -33,14 +37,37 @@ void main()
     lfb_init();
 
     // display a pixmap
-    //lfb_showpicture();
-
-    lfb_showchar(0,0,'1');
-    lfb_showchar(1,0,'2');
-    lfb_showchar(2,0,'3');
-    lfb_showchar(3,1,'a');
-    lfb_showchar(4,2,'b');
-    lfb_showchar(5,3,'c');
+    lfb_showpicture();
+    int flag = sd_init();
+    if(flag == SD_OK){
+        lfb_showchar(0,11,'S');
+        lfb_showchar(1,11,'D');
+        lfb_showchar(2,11,' ');
+        lfb_showchar(3,11,'O');
+        lfb_showchar(4,11,'K');
+        // read the master boot record after our bss segment
+        if(sd_readblock(0,&_end,1)) {
+            // dump it to serial console
+            //uart_dump(&_end);
+        }
+    }
+    else if(flag == SD_TIMEOUT){
+        lfb_showchar(0,11,'S');
+        lfb_showchar(1,11,'D');
+        lfb_showchar(2,11,' ');
+        lfb_showchar(3,11,'T');
+        lfb_showchar(4,11,'L');
+        lfb_showchar(5,11,'E');
+    }
+    else{
+        lfb_showchar(0,11,'S');
+        lfb_showchar(1,11,'D');
+        lfb_showchar(2,11,' ');
+        lfb_showchar(3,11,'F');
+        lfb_showchar(4,11,'A');
+        lfb_showchar(5,11,'I');
+        lfb_showchar(6,11,'L');
+    }
 
     // echo everything back
     while(1) {
