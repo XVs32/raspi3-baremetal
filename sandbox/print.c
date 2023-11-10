@@ -7,15 +7,19 @@
 unsigned int cursor_x=0;
 unsigned int cursor_y=0;
 
-void next_char_pos(){
-    cursor_x++;
-    if(cursor_x==lfb_maxchar()){
-        cursor_x = 0;
-        cursor_y++;
-    }
+void next_line(){
+    cursor_x = 0;
+    cursor_y++;
     if(cursor_y==lfb_maxline()){
         cursor_y = lfb_maxline() - 1;
         lfb_shift(0, -ASCII_PIXEL_HEIGHT*CHAR_SCALE);
+    }
+}
+
+void next_char_pos(){
+    cursor_x++;
+    if(cursor_x==lfb_maxchar()){
+        next_line();
     }
 }
 
@@ -65,6 +69,44 @@ uint32_t print_dec(int64_t a){
     return count;
 }
 
+/**
+ * print hexadecimal
+ */
+uint32_t print_hex(int64_t a){
+    uint32_t count = 0;
+    char a_s[20];
+    if(a == 0){
+        lfb_showchar(cursor_x, cursor_y, '0');
+        next_char_pos();
+        count++;
+    }
+    else{
+        if(a<0){
+            lfb_showchar(cursor_x, cursor_y, '-');
+            next_char_pos();
+            count++;
+            a *= -1;
+        }
+        int32_t i;
+        for(i=0;a!=0;i++){
+            a_s[i] = a%16;
+            a = a >> 4;
+        }
+        for(i--;i>=0;i--){
+            if(a_s[i]<9){
+                lfb_showchar(cursor_x, cursor_y, a_s[i] + '0');
+            }
+            else{
+                lfb_showchar(cursor_x, cursor_y, a_s[i] + 'a' - 0x0a);
+            }
+            next_char_pos();
+            count++;
+        }
+    }
+    return count;
+}
+
+
 
 /**
  * minimal printf implementation
@@ -101,14 +143,12 @@ unsigned int vprintf(char* fmt, __builtin_va_list args){
             if(*fmt=='l') {
                 fmt++;
             }
-            // character
-            if(*fmt=='c') {
+            
+            if(*fmt=='c') { // character
                 arg = __builtin_va_arg(args, int);
                 goto put;
-                
-            } else
-            // decimal number
-            if(*fmt=='d') {
+            }
+            else if(*fmt=='d') { // decimal number
                 arg = __builtin_va_arg(args, int);
 
                 count += print_dec(arg);
@@ -119,37 +159,31 @@ unsigned int vprintf(char* fmt, __builtin_va_list args){
                         count += print_str(" ");
                     }
                 }
-            } else
-            // hex number
-            if(*fmt=='x') {
-
-                /* !!!! NOT CONVERTED TO XVs VERSION YET !!!! */
+            }
+            else if(*fmt=='x') { // hex number
                 arg = __builtin_va_arg(args, long int);
                 // convert to string
-                i=16;
-                tmpstr[i]=0;
-                do {
-                    char n=arg & 0xf;
-                    // 0-9 => '0'-'9', 10-15 => 'A'-'F'
-                    tmpstr[--i]=n+(n>9?0x37:0x30);
-                    arg>>=4;
-                } while(arg!=0 && i>0);
+                count += print_hex(arg);
+
                 // padding, only leading zeros
                 if(len>0 && len<=16) {
                     while(i>16-len) {
-                        tmpstr[--i]='0';
+                        count += print_str(" ");
                     }
-                }
-                p=&tmpstr[i];
-                if(p==(void*)0) {
-                    p="(null)";
                 }
             }
             else if(*fmt=='s') {// string
                 p = __builtin_va_arg(args, char*);
                 count += print_str((char*)p);
             }
-        } else {
+        }
+        else if(*fmt=='\n') { // next line 
+            next_line();
+        }
+        /* \t etc.
+        else if(*fmt=='\t'){}
+        */
+        else{
 put:        
             lfb_showchar(cursor_x, cursor_y, *fmt);
             next_char_pos();
