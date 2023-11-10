@@ -1,5 +1,5 @@
 #include <stdint.h>
 
-void print_dec(int64_t a);
+unsigned int printf(char* fmt, ...);
 
 void next_char_pos();
