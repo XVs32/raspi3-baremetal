@@ -43,6 +43,7 @@ void main()
 
     int flag = sd_init();
     if(flag == SD_OK){
+        /*
         lfb_showchar(0,11,'S');
         lfb_showchar(1,11,'D');
         lfb_showchar(2,11,' ');
@@ -58,7 +59,12 @@ void main()
         print_dec(1234567890123456789);
         print_dec(12345);
         print_dec(-789101);
+        */
 
+        printf("Hello world  ");
+        printf("%d %d ",1, 2);
+        printf("%s","LOLL");
+        printf("Hello world  ");
         
 
         // read the master boot record after our bss segment
